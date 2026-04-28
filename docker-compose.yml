@@ -1,0 +1,33 @@
+services: 
+    persistence:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: notebookum-persistence:latest
+        restart: unless-stopped
+        networks:
+            - notebookum-network
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.persistence.rule=Host(`persistence.internal`)"
+            - "traefik.http.services.persistence.loadbalancer.server.port=5003"
+            # BULKHEAD PATTERN: Protect DB from connection starvation
+            - "traefik.http.middlewares.bulkhead-persistence.inflightreq.amount=50"
+            - "traefik.http.routers.persistence.middlewares=bulkhead-persistence"
+        volumes:
+            - ./app:/app/app:ro
+            - ./main.py:/app/main.py:ro
+        environment:
+            - FLASK_ENV=development
+            - PORT=5003
+            # CQRS PATTERN: Separation of Read and Write Databases
+            - DB_WRITE_HOST=${DB_WRITE_HOST:-mysql-primary}
+            - DB_READ_HOST=${DB_READ_HOST:-mysql-replica}
+            - DB_PORT=${DB_PORT:-3306}
+            - DB_NAME=${DB_NAME:-notebookum}
+            - DB_USER=${DB_USER:-root}
+            - DB_PASSWORD=${DB_PASSWORD}
+
+networks:
+    notebookum-network:
+        external: true
