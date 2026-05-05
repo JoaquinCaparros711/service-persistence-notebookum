@@ -20,7 +20,12 @@ def create_app(test_config=None):
     db.init_app(app)
     
     from .routes.db_users import db_users_bp
+    from .routes.db_documents import db_documents_bp
+    from .routes.db_summaries import db_summaries_bp
+    
     app.register_blueprint(db_users_bp)
+    app.register_blueprint(db_documents_bp)
+    app.register_blueprint(db_summaries_bp)
     
     @app.route("/health")
     def health_check():
