@@ -1,37 +1,34 @@
 FROM python:3.12-slim
 
-# Security: Evitar compilacion de pyc files y buffer
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Crear un usuario y grupo no-root
-RUN groupadd -r notebookum_user && useradd -r -g notebookum_user notebookum_user
-
-WORKDIR /app
-
-# Instalar dependencias del sistema requeridas para build
+# Install system-level dependencies as root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Obtener UV
+# Copy uv binary
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
-# Copiar archivos de requerimientos e instalar dependencias
-COPY pyproject.toml uv.lock* ./
-RUN uv sync
+# Create a non-root system user with a home directory
+RUN useradd -m -u 1000 appuser
 
-# Copiar el codigo del proyecto
-COPY . .
+# Set up working directory with correct ownership
+WORKDIR /app
+RUN chown appuser:appuser /app
 
-# Restringir permisos: root es owner, notebookum_user es grupo. Solo lectura (550) para codigo
-RUN chown -R root:notebookum_user /app && \
-    chmod -R 550 /app
+# Switch to the non-root user
+USER appuser
 
-# Exponer el puerto del microservicio
+# Copy dependency specifications with correct ownership
+COPY --chown=appuser:appuser pyproject.toml uv.lock* ./
+
+# Install project dependencies using uv (creates /app/.venv)
+RUN uv sync --frozen --no-cache
+
+# Copy project source files with correct ownership
+COPY --chown=appuser:appuser . .
+
+# Expose microservice port
 EXPOSE 5000
 
-# Security: Correr la aplicacion como el usuario sin privilegios
-USER notebookum_user
-
+# Execute server using the non-root virtual environment
 CMD ["uv", "run", "granian", "--interface", "wsgi", "main:app", "--host", "0.0.0.0", "--port", "5000", "--workers", "2"]
