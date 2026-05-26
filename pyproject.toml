@@ -12,6 +12,10 @@ dependencies = [
     "alembic>=1.13",
     "granian>=1.0",
     "python-dotenv>=1.0",
+    "flask-marshmallow>=1.5.0",
+    "marshmallow-sqlalchemy>=1.5.0",
+    "flask-talisman>=1.1.0",
+    "flask-cors>=6.0.2",
 ]
 
 [dependency-groups]

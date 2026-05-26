@@ -21,7 +21,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Get Flask app and configure database URL
-app = create_app(os.getenv("FLASK_ENV", "development"))
+app = create_app()
 config.set_main_option("sqlalchemy.url", app.config["SQLALCHEMY_DATABASE_URI"])
 
 # Add your model's MetaData object here for 'autogenerate' support

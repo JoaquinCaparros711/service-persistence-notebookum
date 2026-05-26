@@ -2,63 +2,47 @@
 
 import pytest
 from app.models.document import HistorialDocumento
-from app.models.user import User
+
 
 @pytest.mark.contract
 class TestDBDocumentsAPI:
     def test_create_document(self, client, session):
-        user = User(email="api_doc_test@example.com", nombre="Test User")
-        session.add(user)
-        session.commit()
-        
-        data = {
-            "usuario_id": user.id,
-            "nombre_archivo": "test.pdf",
-            "tamanio_bytes": 1024
-        }
+        data = {"user_id": 1, "filename": "test.pdf", "file_path": "/tmp/test.pdf"}
         response = client.post("/api/v1/db/documents", json=data)
         assert response.status_code == 201
-        
+
         resp_data = response.get_json()
-        assert resp_data["nombre_archivo"] == "test.pdf"
-        assert resp_data["estado"] == "pending"
-        
+        assert resp_data["filename"] == "test.pdf"
+        assert resp_data["user_id"] == 1
+
     def test_get_document(self, client, session):
-        user = User(email="get_doc_test@example.com", nombre="Get User")
-        session.add(user)
-        session.commit()
-        
-        doc = HistorialDocumento(usuario_id=user.id, nombre_archivo="get.pdf", tamanio_bytes=500)
+        doc = HistorialDocumento(user_id=1, filename="get.pdf", file_path="/get.pdf")
         session.add(doc)
         session.commit()
-        
+
         response = client.get(f"/api/v1/db/documents/{doc.id}")
         assert response.status_code == 200
-        
+
     def test_patch_document(self, client, session):
-        user = User(email="patch_doc_test@example.com", nombre="Patch User")
-        session.add(user)
-        session.commit()
-        
-        doc = HistorialDocumento(usuario_id=user.id, nombre_archivo="patch.pdf", tamanio_bytes=500, estado="pending")
+        doc = HistorialDocumento(
+            user_id=1, filename="patch.pdf", file_path="/patch.pdf"
+        )
         session.add(doc)
         session.commit()
-        
-        response = client.patch(f"/api/v1/db/documents/{doc.id}", json={"estado": "completed", "extracto_texto": "text"})
+
+        response = client.patch(
+            f"/api/v1/db/documents/{doc.id}", json={"filename": "new.pdf"}
+        )
         assert response.status_code == 200
-        assert response.get_json()["estado"] == "completed"
-        
+        assert response.get_json()["filename"] == "new.pdf"
+
     def test_delete_document(self, client, session):
-        user = User(email="del_doc_test@example.com", nombre="Del User")
-        session.add(user)
-        session.commit()
-        
-        doc = HistorialDocumento(usuario_id=user.id, nombre_archivo="del.pdf", tamanio_bytes=500)
+        doc = HistorialDocumento(user_id=1, filename="del.pdf", file_path="/del.pdf")
         session.add(doc)
         session.commit()
-        
+
         response = client.delete(f"/api/v1/db/documents/{doc.id}")
         assert response.status_code == 204
-        
+
         # Verify deletion
         assert session.get(HistorialDocumento, doc.id) is None

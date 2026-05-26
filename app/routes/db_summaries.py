@@ -1,42 +1,49 @@
 """Database CRUD endpoints for Summaries"""
 
 from flask import Blueprint, request, jsonify
-from app.database import db
-from app.models.summary import Summary
-from app.models.document import HistorialDocumento
+from app.services.summary_service import SummaryService
 
 db_summaries_bp = Blueprint("db_summaries", __name__, url_prefix="/api/v1/db/summaries")
+summary_service = SummaryService()
+
+
+@db_summaries_bp.get("")
+def list_summaries():
+    documento_id = request.args.get("documento_id", type=int)
+    result = summary_service.get_all(documento_id)
+    return jsonify(result), 200
+
 
 @db_summaries_bp.post("")
 def create_summary():
     data = request.get_json()
-    documento_id = data.get("documento_id")
-    contenido = data.get("contenido")
-    modelo_utilizado = data.get("modelo_utilizado", "gpt-4o")
-    
-    doc = db.session.get(HistorialDocumento, documento_id)
-    if not doc:
-        return jsonify({"detail": "Document not found"}), 404
-        
-    new_summary = Summary(
-        documento_id=documento_id,
-        contenido=contenido,
-        modelo_utilizado=modelo_utilizado,
-        status="completed"
-    )
-    
-    # Backward compatibility logic for old tests
-    if data.get("user_id"):
-        new_summary.user_id = data.get("user_id")
-        
-    db.session.add(new_summary)
-    db.session.commit()
-    
-    return jsonify(new_summary.to_dict()), 201
+    try:
+        result = summary_service.create(data)
+        return jsonify(result), 201
+    except ValueError as e:
+        return jsonify({"detail": str(e)}), 404
+
 
 @db_summaries_bp.get("/<int:summary_id>")
 def get_summary(summary_id):
-    summary = db.session.get(Summary, summary_id)
-    if not summary:
+    result = summary_service.get_by_id(summary_id)
+    if result is None:
         return jsonify({"detail": "Summary not found"}), 404
-    return jsonify(summary.to_dict()), 200
+    return jsonify(result), 200
+
+
+@db_summaries_bp.patch("/<int:summary_id>")
+def update_summary(summary_id):
+    data = request.get_json()
+    result = summary_service.update(summary_id, data)
+    if result is None:
+        return jsonify({"detail": "Summary not found"}), 404
+    return jsonify(result), 200
+
+
+@db_summaries_bp.delete("/<int:summary_id>")
+def delete_summary(summary_id):
+    success = summary_service.delete(summary_id)
+    if not success:
+        return jsonify({"detail": "Summary not found"}), 404
+    return "", 204
