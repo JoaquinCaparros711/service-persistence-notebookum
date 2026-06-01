@@ -38,6 +38,7 @@ def create_app(test_config=None):
 
     # Preload models to populate SQLAlchemy registry before Marshmallow schemas introspect them
     from app.models.user import User
+    from app.models.notebook import Notebook
     from app.models.document import HistorialDocumento
     from app.models.summary import Summary
 
@@ -46,10 +47,12 @@ def create_app(test_config=None):
     ma.init_app(app)
 
     from .routes.db_documents import db_documents_bp
+    from .routes.db_notebooks import db_notebooks_bp
     from .routes.db_summaries import db_summaries_bp
     from .routes.db_users import db_users_bp
 
     app.register_blueprint(db_documents_bp)
+    app.register_blueprint(db_notebooks_bp)
     app.register_blueprint(db_summaries_bp)
     app.register_blueprint(db_users_bp)
 

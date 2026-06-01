@@ -12,6 +12,7 @@ class HistorialDocumento(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    notebook_id = db.Column(db.Integer, db.ForeignKey("notebooks.id", ondelete="CASCADE"), nullable=True, index=True)
     filename = db.Column(db.String(255), nullable=False)
     file_path = db.Column(db.String(512), nullable=False)
     job_id = db.Column(db.String(36), nullable=True, index=True)
