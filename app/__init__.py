@@ -41,6 +41,8 @@ def create_app(test_config=None):
     from app.models.notebook import Notebook
     from app.models.document import HistorialDocumento
     from app.models.summary import Summary
+    from app.models.conversation import Conversation
+    from app.models.message import Message
 
     from app.schemas import ma
 
@@ -48,11 +50,15 @@ def create_app(test_config=None):
 
     from .routes.db_documents import db_documents_bp
     from .routes.db_notebooks import db_notebooks_bp
+    from .routes.db_conversations import db_conversations_bp
+    from .routes.db_messages import db_messages_bp
     from .routes.db_summaries import db_summaries_bp
     from .routes.db_users import db_users_bp
 
     app.register_blueprint(db_documents_bp)
     app.register_blueprint(db_notebooks_bp)
+    app.register_blueprint(db_conversations_bp)
+    app.register_blueprint(db_messages_bp)
     app.register_blueprint(db_summaries_bp)
     app.register_blueprint(db_users_bp)
 
