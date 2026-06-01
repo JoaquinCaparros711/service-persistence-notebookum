@@ -14,6 +14,9 @@ class HistorialDocumento(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
     filename = db.Column(db.String(255), nullable=False)
     file_path = db.Column(db.String(512), nullable=False)
+    job_id = db.Column(db.String(36), nullable=True, index=True)
+    status = db.Column(db.String(20), nullable=False, default="PENDING", index=True)
+    extracted_text = db.Column(db.Text, nullable=True)
     created_at = db.Column(
         db.DateTime, nullable=False, default=lambda: datetime.now(UTC)
     )
