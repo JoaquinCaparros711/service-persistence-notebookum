@@ -3,7 +3,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.document_service import DocumentService
 
-db_documents_bp = Blueprint("db_documents", __name__, url_prefix="/api/v1/db/documents")
+db_documents_bp = Blueprint("db_documents", __name__, url_prefix="/api/v1/documents")
 document_service = DocumentService()
 
 

@@ -3,7 +3,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.summary_service import SummaryService
 
-db_summaries_bp = Blueprint("db_summaries", __name__, url_prefix="/api/v1/db/summaries")
+db_summaries_bp = Blueprint("db_summaries", __name__, url_prefix="/api/v1/summaries")
 summary_service = SummaryService()
 
 

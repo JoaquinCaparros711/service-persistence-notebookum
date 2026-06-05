@@ -9,22 +9,17 @@ services:
             notebookum-network:
                 aliases:
                     - persistence.universidad.localhost
-            internal-network:
-                aliases:
-                    - persistence-db
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.persistence.rule=Host(`persistence.universidad.localhost`)"
-            - "traefik.http.routers.persistence.entryPoints=https"
             - "traefik.http.routers.persistence.tls=true"
             - "traefik.http.services.persistence.loadbalancer.server.port=5000"
             # CIRCUIT BREAKER PATTERN
-            - "traefik.http.middlewares.cb-persistence.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 100 || ResponseCodeRatio(500, 600, 0, 600) > 0.30 || NetworkErrorRatio() > 0.10"
+            - "traefik.http.middlewares.persistence.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 100 || ResponseCodeRatio(500, 600, 0, 600) > 0.30 || NetworkErrorRatio() > 0.10"
             # BULKHEAD PATTERN
-            - "traefik.http.middlewares.bulkhead-persistence.inflightreq.amount=10"
-            - "traefik.http.routers.persistence.middlewares=cb-persistence,bulkhead-persistence"
+            - "traefik.http.middlewares.persistence.inflightreq.amount=10"
         environment:
-            - FLASK_ENV=production
+            - FLASK_ENV=development
             - PORT=5000
             - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
             - DB_WRITE_HOST=${DB_WRITE_HOST:-mysql-primary}

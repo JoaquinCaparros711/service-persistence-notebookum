@@ -37,17 +37,20 @@ class BaseRepository(Generic[T]):
         )
 
     def create(self, instance: T) -> T:
-        """Add and commit a new instance to the database (Master)."""
+        """Add, flush, and commit a new instance to the database (Master)."""
         self.session.add(instance)
+        self.session.flush()
         self.session.commit()
         return instance
 
     def update(self, instance: T) -> T:
-        """Commit changes made to an existing instance (Master)."""
+        """Flush and commit changes made to an existing instance (Master)."""
+        self.session.flush()
         self.session.commit()
         return instance
 
     def delete(self, instance: T) -> None:
-        """Delete an instance from the database (Master)."""
+        """Delete and commit an instance from the database (Master)."""
         self.session.delete(instance)
+        self.session.flush()
         self.session.commit()

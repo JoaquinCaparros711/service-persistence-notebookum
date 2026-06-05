@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.message_service import MessageService
 
-db_messages_bp = Blueprint("db_messages", __name__, url_prefix="/api/v1/db/messages")
+db_messages_bp = Blueprint("db_messages", __name__, url_prefix="/api/v1/messages")
 message_service = MessageService()
 
 @db_messages_bp.get("")

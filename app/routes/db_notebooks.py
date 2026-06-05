@@ -3,7 +3,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.notebook_service import NotebookService
 
-db_notebooks_bp = Blueprint("db_notebooks", __name__, url_prefix="/api/v1/db/notebooks")
+db_notebooks_bp = Blueprint("db_notebooks", __name__, url_prefix="/api/v1/notebooks")
 notebook_service = NotebookService()
 
 
