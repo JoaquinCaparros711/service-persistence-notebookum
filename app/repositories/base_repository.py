@@ -1,5 +1,7 @@
-from typing import TypeVar, Generic, List, Optional
+from typing import Generic, List, Optional, TypeVar
+
 from sqlalchemy import select
+
 from app.database import db
 
 T = TypeVar("T")
@@ -12,10 +14,6 @@ class BaseRepository(Generic[T]):
         self.model_class = model_class
         # Centralizamos el acceso a db.session (Context-Local)
         self.session = db.session
-
-    def _get_read_engine(self):
-        """Helper to get the read replica engine if configured, else fallback to primary."""
-        return db.engines.get("read_replica", db.engine)
 
     def get_by_id(self, id: int) -> Optional[T]:
         """Fetch an entity by its primary key from read replica."""
@@ -54,3 +52,7 @@ class BaseRepository(Generic[T]):
         self.session.delete(instance)
         self.session.flush()
         self.session.commit()
+
+    def _get_read_engine(self):
+        """Helper to get the read replica engine if configured, else fallback to primary."""
+        return db.engines.get("read_replica", db.engine)

@@ -1,4 +1,5 @@
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
+
 from app.repositories.conversation_repository import ConversationRepository
 from app.schemas.conversation import conversation_schema, conversations_schema
 

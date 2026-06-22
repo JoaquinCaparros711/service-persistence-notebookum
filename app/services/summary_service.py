@@ -1,6 +1,7 @@
-from typing import Optional, List, Dict, Any
-from app.repositories.summary_repository import SummaryRepository
+from typing import Any, Dict, List, Optional
+
 from app.repositories.document_repository import DocumentRepository
+from app.repositories.summary_repository import SummaryRepository
 from app.schemas.summary import summary_schema, summaries_schema
 
 

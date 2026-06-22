@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+
 from app.services.conversation_service import ConversationService
 
 db_conversations_bp = Blueprint("db_conversations", __name__, url_prefix="/api/v1/conversations")

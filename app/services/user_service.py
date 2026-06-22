@@ -1,4 +1,5 @@
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
+
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import user_schema, users_schema
 

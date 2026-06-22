@@ -1,6 +1,7 @@
 """Database CRUD endpoints for Summaries"""
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+
 from app.services.summary_service import SummaryService
 
 db_summaries_bp = Blueprint("db_summaries", __name__, url_prefix="/api/v1/summaries")

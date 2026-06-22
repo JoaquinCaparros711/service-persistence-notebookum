@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+
 from app.services.message_service import MessageService
 
 db_messages_bp = Blueprint("db_messages", __name__, url_prefix="/api/v1/messages")

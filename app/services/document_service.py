@@ -1,5 +1,7 @@
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
+
 from werkzeug.utils import secure_filename
+
 from app.repositories.document_repository import DocumentRepository
 from app.schemas.document import document_schema, documents_schema
 

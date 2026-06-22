@@ -1,6 +1,7 @@
 """Database CRUD endpoints for Documents"""
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+
 from app.services.document_service import DocumentService
 
 db_documents_bp = Blueprint("db_documents", __name__, url_prefix="/api/v1/documents")

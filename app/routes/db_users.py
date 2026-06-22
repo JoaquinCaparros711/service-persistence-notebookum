@@ -1,9 +1,10 @@
 """Database CRUD endpoints for Users"""
 
-from flask import Blueprint, request, jsonify
-from app.services.user_service import UserService
-
 import logging
+
+from flask import Blueprint, jsonify, request
+
+from app.services.user_service import UserService
 
 db_users_bp = Blueprint("db_users", __name__, url_prefix="/api/v1/users")
 user_service = UserService()

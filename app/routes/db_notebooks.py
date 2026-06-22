@@ -1,6 +1,7 @@
 """Database CRUD endpoints for Notebooks"""
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+
 from app.services.notebook_service import NotebookService
 
 db_notebooks_bp = Blueprint("db_notebooks", __name__, url_prefix="/api/v1/notebooks")

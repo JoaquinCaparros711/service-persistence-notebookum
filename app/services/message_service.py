@@ -1,4 +1,5 @@
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
+
 from app.repositories.message_repository import MessageRepository
 from app.schemas.message import message_schema, messages_schema
 
